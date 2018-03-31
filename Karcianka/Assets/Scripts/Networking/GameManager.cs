@@ -7,57 +7,111 @@ using UnityEngine.UI;
 
 namespace Com.Polygon.CardGame
 {
-	public class GameManager : Photon.PunBehaviour, IPunTurnManagerCallbacks
-	{
-		private PunTurnManager turnManager;
+    public enum Hand
+    {
+        None,
+        Card,
+        Spell
+    }
 
-		/// <summary>
-		/// The duration of the turn in seconds.
-		/// </summary>
-		public float TurnDuration;
+    public enum ResultType
+    {
+        None,
+        Draw,
+        LocalWin,
+        LocalLoss
+    }
 
-		public Text TimeText;
-		public Text PlayerText;
-		public Text RemotePlayerText;
+    public class GameManager : Photon.PunBehaviour, IPunTurnManagerCallbacks
+    {
+        #region private variables
+        private PunTurnManager turnManager;
+        private GameManager GameManagerInstance { get; set; }
+        [SerializeField]
+        private float TurnDuration;
+        #endregion
 
-		private void Start()
-		{
-			this.turnManager = this.gameObject.AddComponent<PunTurnManager>();
-			this.turnManager.TurnManagerListener = this;
-			this.turnManager.TurnDuration = 5f;
+        #region public variables
+        public Text TimeText;
+        public Text PlayerText;
+        public Text RemotePlayerText;
+        public GameObject playerPrefab;
+        #endregion
 
-			PlayerText.text = PhotonNetwork.player.NickName;
-		}
+        [SerializeField]
+        private Image localSelectionImage;
+        public Hand localSelection;
 
-		private void Update()
-		{
-			this.TimeText.text = "Time: " + string.Format("{0:0.00}", this.turnManager.RemainingSecondsInTurn);
-			UpdateTimeText();
-		}
+        [SerializeField]
+        private Image remoteSelectionImage;
+        public Hand remoteSelection;
 
-		public void StartTurn()
-		{
-			if (PhotonNetwork.isMasterClient)
-			{
-				Debug.Log("Begin Turn");
-				this.turnManager.BeginTurn();
-			}
-		}
+        private void Awake()
+        {
+            GameManagerInstance = this;
+        }
 
-		private void UpdateTimeText()
-		{
-			PhotonPlayer remote = PhotonNetwork.player.GetNext();
-			PhotonPlayer local = PhotonNetwork.player;
+        private void Start()
+        {
+            this.turnManager = this.gameObject.AddComponent<PunTurnManager>();
+            this.turnManager.TurnManagerListener = this;
+            this.turnManager.TurnDuration = TurnDuration;
 
-			if(remote != null)
-			{
-				RemotePlayerText.text = remote.NickName;
-			}
-			else
-			{
-				RemotePlayerText.text = "waiting for another player...";
-			}
-		}
+            PlayerText.text = PhotonNetwork.player.NickName;
+
+            Debug.Log("ID" + PhotonNetwork.player.ID);
+
+            if(playerPrefab == null)
+            {
+                Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+            }
+            else
+            {
+                if (PlayerManager.LocalPlayerInstance == null)
+                {
+                    Debug.Log("We are Instantiating LocalPlayer from " + Application.loadedLevelName);
+                    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                    if(PhotonNetwork.playerList.Length == 1)
+                        PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0);
+                    else
+                        PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                }
+                else
+                {
+                    Debug.Log("Ignoring scene load for " + Application.loadedLevelName);
+                }
+            }
+        }
+
+        private void Update()
+        {
+            this.TimeText.text = "Time: " + string.Format("{0:0.00}", this.turnManager.RemainingSecondsInTurn);
+            UpdateTimeText();
+        }
+
+        public void StartTurn()
+        {
+            if (PhotonNetwork.isMasterClient)
+            {
+                Debug.Log("Begin Turn");
+                this.turnManager.BeginTurn();
+            }
+        }
+
+        private void UpdateTimeText()
+        {
+            PhotonPlayer remote = PhotonNetwork.player.GetNext();
+            PhotonPlayer local = PhotonNetwork.player;
+
+            if (remote != null)
+            {
+                RemotePlayerText.text = remote.NickName;
+            }
+            else
+            {
+                RemotePlayerText.text = "waiting for another player...";
+            }
+        }
 
         //private void LoadArena()
         //{
@@ -69,85 +123,100 @@ namespace Com.Polygon.CardGame
         //    PhotonNetwork.LoadLevel("Main");
         //}
         public override void OnLeftRoom()
-		{
-			SceneManager.LoadScene(0);
-		}
+        {
+            SceneManager.LoadScene(0);
+        }
 
-		public void LeaveRoom()
-		{
-			PhotonNetwork.LeaveRoom();
-		}
+        public void LeaveRoom()
+        {
+            PhotonNetwork.LeaveRoom();
+        }
 
-		#region Photon Messages
-
-
-		public override void OnPhotonPlayerConnected(PhotonPlayer other)
-		{
-			Debug.Log("Other player arrived " + other.NickName); // not seen if you're the player connecting
-
-			if (PhotonNetwork.room.PlayerCount== 2)
-			{
-				Debug.Log("Starting turn...");
-				this.StartTurn();
-			}
-		}
+        #region Photon Messages
 
 
-		public override void OnPhotonPlayerDisconnected(PhotonPlayer other)
-		{
-			Debug.Log("OnPhotonPlayerDisconnected() " + other.NickName); // seen when other disconnects
+        public override void OnPhotonPlayerConnected(PhotonPlayer other)
+        {
+            Debug.Log("Other player arrived " + other.NickName); // not seen if you're the player connecting
+
+            if (PhotonNetwork.room.PlayerCount == 2)
+            {
+                Debug.Log("Starting turn...");
+                this.StartTurn();
+            }
+        }
 
 
-			if (PhotonNetwork.isMasterClient)
-			{
-				Debug.Log("OnPhotonPlayerDisonnected isMasterClient " + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
-			}
-		}
-
-		public override void OnJoinedRoom()
-		{
-			if (PhotonNetwork.room.PlayerCount == 2)
-			{
-				if (this.turnManager.Turn == 0)
-				{
-					Debug.Log("There are 2 players. Starting the game");
-					// when the room has two players, start the first turn (later on, joining players won't trigger a turn)
-					this.StartTurn();
-				}
-			}
-			else
-			{
-				Debug.Log("Waiting for another player");
-			}
-		}
-
-		public void OnTurnBegins(int turn)
-		{
-			Debug.Log("On turn " + turn);
-		}
-
-		public void OnTurnCompleted(int turn)
-		{
-			Debug.Log("OnTurnCompleted! " + turn);
-			this.StartTurn();
-		}
-
-		public void OnPlayerMove(PhotonPlayer player, int turn, object move)
-		{
-
-		}
-
-		public void OnPlayerFinished(PhotonPlayer player, int turn, object move)
-		{
-
-		}
-
-		public void OnTurnTimeEnds(int turn)
-		{
-			OnTurnCompleted(-1);
-		}
+        public override void OnPhotonPlayerDisconnected(PhotonPlayer other)
+        {
+            Debug.Log("OnPhotonPlayerDisconnected() " + other.NickName); // seen when other disconnects
 
 
-		#endregion
-	}
+            if (PhotonNetwork.isMasterClient)
+            {
+                Debug.Log("OnPhotonPlayerDisonnected isMasterClient " + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
+            }
+        }
+
+        public override void OnJoinedRoom()
+        {
+            if (PhotonNetwork.room.PlayerCount == 2)
+            {
+                if (this.turnManager.Turn == 0)
+                {
+                    Debug.Log("There are 2 players. Starting the game");
+                    // when the room has two players, start the first turn (later on, joining players won't trigger a turn)
+                    this.StartTurn();
+                }
+            }
+            else
+            {
+                Debug.Log("Waiting for another player");
+            }
+        }
+
+        public void OnTurnBegins(int turn)
+        {
+            Debug.Log("On turn " + turn);
+            this.localSelection = Hand.None;
+            this.remoteSelection = Hand.None;
+
+        }
+
+        public void OnTurnCompleted(int turn)
+        {
+            OnEndTurn();
+        }
+
+        public void OnPlayerMove(PhotonPlayer player, int turn, object move)
+        {
+
+        }
+
+        public void OnPlayerFinished(PhotonPlayer player, int turn, object move)
+        {
+            Debug.Log("OnTurnFinished: " + player + " turn: " + turn + " action: " + move);
+
+            if (player.IsLocal)
+            {
+                this.localSelection = (Hand)(byte)move;
+            }
+            else
+            {
+                this.remoteSelection = (Hand)(byte)move;
+            }
+        }
+
+        public void OnTurnTimeEnds(int turn)
+        {
+            OnTurnCompleted(-1);
+        }
+
+
+        #endregion
+        public void OnEndTurn()
+        {
+            this.StartTurn();
+        }
+    }
 }
