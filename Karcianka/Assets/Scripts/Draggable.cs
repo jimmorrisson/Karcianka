@@ -70,7 +70,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             {
                 card.onTable = true;
             }
-
+            else
+            {
+                card.onTable = false;
+            }
             this.transform.SetSiblingIndex(placeHolder.transform.GetSiblingIndex());
             GetComponent<CanvasGroup>().blocksRaycasts = true;
             Destroy(placeHolder);

@@ -311,6 +311,11 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224110836001128854, guid: 0adde5697d92ae84a8d0fd924775d9da,
     type: 2}
   m_PrefabInternal: {fileID: 331691965}
+--- !u!1 &331691967 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1023701211329614, guid: 0adde5697d92ae84a8d0fd924775d9da,
+    type: 2}
+  m_PrefabInternal: {fileID: 331691965}
 --- !u!1 &332958276
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +452,7 @@ Prefab:
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -27.875
       objectReference: {fileID: 0}
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
@@ -577,7 +582,7 @@ Prefab:
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -27.875
       objectReference: {fileID: 0}
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
@@ -945,7 +950,7 @@ Prefab:
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -27.875
       objectReference: {fileID: 0}
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
@@ -1090,7 +1095,7 @@ Prefab:
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -27.875
       objectReference: {fileID: 0}
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
@@ -1308,6 +1313,11 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224110836001128854, guid: 0adde5697d92ae84a8d0fd924775d9da,
     type: 2}
   m_PrefabInternal: {fileID: 1162446962}
+--- !u!1 &1162446964 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1023701211329614, guid: 0adde5697d92ae84a8d0fd924775d9da,
+    type: 2}
+  m_PrefabInternal: {fileID: 1162446962}
 --- !u!1 &1177027136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,7 +1352,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 740, y: 0}
   m_SizeDelta: {x: 320, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1177027138
@@ -1443,7 +1453,7 @@ GameObject:
   - component: {fileID: 1430506905}
   - component: {fileID: 1430506904}
   m_Layer: 5
-  m_Name: TableDropZone
+  m_Name: Player2TableDropZone
   m_TagString: Table
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1460,7 +1470,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1858622632}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1589,7 +1599,7 @@ Prefab:
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -27.875
       objectReference: {fileID: 0}
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
@@ -1697,7 +1707,7 @@ GameObject:
   - component: {fileID: 1466545448}
   - component: {fileID: 1466545447}
   m_Layer: 5
-  m_Name: TableDropZone (1)
+  m_Name: Player1TableDropZone
   m_TagString: Table
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1714,7 +1724,7 @@ RectTransform:
   m_LocalScale: {x: 0.99999726, y: 0.99999726, z: 0.99999726}
   m_Children: []
   m_Father: {fileID: 1858622632}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1852,7 +1862,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attacking: 0
   startPos: {x: 0, y: 0, z: 0}
+  player1Hand: {fileID: 331691967}
+  player2Hand: {fileID: 1162446964}
+  player1Table: {fileID: 1466545445}
+  player2Table: {fileID: 1430506902}
   selectedCard: {fileID: 0}
+  cardPrefab: {fileID: 1423600840253326, guid: a4882e520a62f9f479f07e3919174aa1, type: 2}
+  deck: []
 --- !u!1 &1766842215
 GameObject:
   m_ObjectHideFlags: 0
@@ -2069,8 +2085,8 @@ RectTransform:
   - {fileID: 1177027137}
   - {fileID: 331691966}
   - {fileID: 1162446963}
-  - {fileID: 1430506903}
   - {fileID: 1466545446}
+  - {fileID: 1430506903}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2205,7 +2221,7 @@ Prefab:
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -27.875
       objectReference: {fileID: 0}
     - target: {fileID: 224041307046985850, guid: a4882e520a62f9f479f07e3919174aa1,
         type: 2}

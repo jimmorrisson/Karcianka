@@ -94,6 +94,7 @@ namespace Com.Polygon.CardGame
             if (PhotonNetwork.isMasterClient)
             {
                 Debug.Log("Begin Turn");
+                
                 this.turnManager.BeginTurn();
             }
         }
@@ -180,11 +181,13 @@ namespace Com.Polygon.CardGame
             Debug.Log("On turn " + turn);
             this.localSelection = Hand.None;
             this.remoteSelection = Hand.None;
-
+            CardsManager.Instance.DrawCard(turn);
+            CardsManager.Instance.DisablePanel(turn);
         }
 
         public void OnTurnCompleted(int turn)
         {
+
             OnEndTurn();
         }
 
