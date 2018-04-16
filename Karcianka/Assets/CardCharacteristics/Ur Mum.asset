@@ -14,3 +14,8 @@ MonoBehaviour:
   name: Ur Mom
   description: She so fat lol
   image: {fileID: 0}
+  health: 10
+  mana: 0
+  attack: 1
+  isAttacking: 0
+  onTable: 0

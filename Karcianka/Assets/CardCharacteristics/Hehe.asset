@@ -14,3 +14,6 @@ MonoBehaviour:
   name: Hehe
   description: Heheheheh
   image: {fileID: 0}
+  health: 10
+  mana: 0
+  attack: 1

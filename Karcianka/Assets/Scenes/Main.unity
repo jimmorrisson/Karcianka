@@ -406,6 +406,16 @@ Prefab:
       propertyPath: m_Text
       value: Heheheheh
       objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: viewIdField
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: instantiationId
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4882e520a62f9f479f07e3919174aa1, type: 2}
   m_IsPrefabParent: 0
@@ -607,6 +617,16 @@ Prefab:
       propertyPath: m_Text
       value: She so fat lol
       objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: viewIdField
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: instantiationId
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4882e520a62f9f479f07e3919174aa1, type: 2}
   m_IsPrefabParent: 0
@@ -746,6 +766,16 @@ Prefab:
         type: 2}
       propertyPath: m_Text
       value: Hehe
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: viewIdField
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: instantiationId
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4882e520a62f9f479f07e3919174aa1, type: 2}
@@ -982,6 +1012,16 @@ Prefab:
       propertyPath: m_Text
       value: She so fat lol
       objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: viewIdField
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: instantiationId
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4882e520a62f9f479f07e3919174aa1, type: 2}
   m_IsPrefabParent: 0
@@ -1116,6 +1156,16 @@ Prefab:
         type: 2}
       propertyPath: m_Text
       value: She so fat lol
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: viewIdField
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: instantiationId
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4882e520a62f9f479f07e3919174aa1, type: 2}
@@ -1342,6 +1392,16 @@ Prefab:
         type: 2}
       propertyPath: m_Text
       value: Heheheheh
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: viewIdField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871561767546862, guid: a4882e520a62f9f479f07e3919174aa1,
+        type: 2}
+      propertyPath: instantiationId
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4882e520a62f9f479f07e3919174aa1, type: 2}

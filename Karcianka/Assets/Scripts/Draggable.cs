@@ -12,6 +12,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public Transform placeHolderParent = null;
     GameObject placeHolder;
 
+    public Card card;
     public PhotonView pView;
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -64,6 +65,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (pView.isMine)
         {
             this.transform.SetParent(parentToReturnTo);
+
+            if (parentToReturnTo.tag == "Table")
+            {
+                card.onTable = true;
+            }
+
             this.transform.SetSiblingIndex(placeHolder.transform.GetSiblingIndex());
             GetComponent<CanvasGroup>().blocksRaycasts = true;
             Destroy(placeHolder);
