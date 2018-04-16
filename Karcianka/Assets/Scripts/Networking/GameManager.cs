@@ -61,7 +61,7 @@ namespace Com.Polygon.CardGame
 
             Debug.Log("ID" + PhotonNetwork.player.ID);
 
-            if(playerPrefab == null)
+            if (playerPrefab == null)
             {
                 Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
             }
@@ -71,7 +71,7 @@ namespace Com.Polygon.CardGame
                 {
                     Debug.Log("We are Instantiating LocalPlayer from " + Application.loadedLevelName);
                     // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                    if(PhotonNetwork.playerList.Length == 1)
+                    if (PhotonNetwork.playerList.Length == 1)
                         PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0);
                     else
                         PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
@@ -94,7 +94,7 @@ namespace Com.Polygon.CardGame
             if (PhotonNetwork.isMasterClient)
             {
                 Debug.Log("Begin Turn");
-                
+
                 this.turnManager.BeginTurn();
             }
         }
@@ -183,11 +183,11 @@ namespace Com.Polygon.CardGame
             this.remoteSelection = Hand.None;
             CardsManager.Instance.DrawCard(turn);
             CardsManager.Instance.DisablePanel(turn);
+            CardsManager.Instance.PlayerTurn(turn);
         }
 
         public void OnTurnCompleted(int turn)
         {
-
             OnEndTurn();
         }
 
@@ -220,6 +220,15 @@ namespace Com.Polygon.CardGame
         public void OnEndTurn()
         {
             this.StartTurn();
+        }
+
+        public void OnChangeTurn()
+        {
+            if (PhotonNetwork.room.PlayerCount < 2)
+            {
+                return;
+            }
+            OnTurnCompleted(-1);
         }
     }
 }

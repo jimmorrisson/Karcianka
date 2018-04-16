@@ -19,6 +19,7 @@ public class CardsManager : Photon.PunBehaviour
     public Card selectedCard;
     public GameObject cardPrefab;
     public List<GameObject> deck = new List<GameObject>();
+    public Text currentTurn;
 
     #region Singleton
     public static CardsManager Instance { get; private set; }
@@ -83,6 +84,17 @@ public class CardsManager : Photon.PunBehaviour
         Debug.Log(card.card.health);
     }
 
+    public void PlayerTurn(int turn)
+    {
+        if (turn % 2 == 1)
+        {
+            currentTurn.text = "Player's 1 turn";
+        }
+        else
+        {
+            currentTurn.text = "Player's 2 turn";
+        }
+    }
     public void DrawCard(int turn)
     {
         if (deck.Count <= 0)
