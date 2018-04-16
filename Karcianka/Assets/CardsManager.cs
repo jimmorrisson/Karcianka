@@ -75,7 +75,7 @@ public class CardsManager : Photon.PunBehaviour
     }
     public void AttackCard(Card card)
     {
-        if (card == selectedCard)
+        if (card == selectedCard || CheckIfCardIsYours(card))
         {
             return;
         }
@@ -84,6 +84,17 @@ public class CardsManager : Photon.PunBehaviour
         Debug.Log(card.card.health);
     }
 
+    private bool CheckIfCardIsYours(Card card)
+    {
+        var selectedParent = Instance.selectedCard.transform.parent;
+        var cardParent = card.transform.parent;
+
+        if (selectedParent == cardParent)
+        {
+            return true;
+        }
+        return false;
+    }
     public void PlayerTurn(int turn)
     {
         if (turn % 2 == 1)
@@ -121,6 +132,11 @@ public class CardsManager : Photon.PunBehaviour
             EnableDropZone(player1Hand);
             DisableDropZone(player2Table);
             EnableDropZone(player1Table);
+
+            var cardsToDisable = GetCardsInHand(player2Hand);
+            FlipCards(cardsToDisable, false);
+            var cardsToEnable = GetCardsInHand(player1Hand);
+            FlipCards(cardsToEnable, true);
         }
         else
         {
@@ -128,6 +144,12 @@ public class CardsManager : Photon.PunBehaviour
             EnableDropZone(player2Hand);
             DisableDropZone(player1Table);
             EnableDropZone(player2Table);
+
+            var cardsToEnable = GetCardsInHand(player2Hand);
+            var cardsToDisable = GetCardsInHand(player1Hand);
+
+            FlipCards(cardsToEnable, true);
+            FlipCards(cardsToDisable, false);
         }
     }
     private void DisableDropZone(GameObject droppablePanel)
@@ -143,6 +165,28 @@ public class CardsManager : Photon.PunBehaviour
         if (droppablePanel.GetComponent<DropZone>() != null)
         {
             droppablePanel.GetComponent<DropZone>().enabled = true;
+        }
+    }
+
+    private List<Card> GetCardsInHand(GameObject otherHand)
+    {
+        List<Card> cards = new List<Card>();
+
+        var list = otherHand.GetComponentsInChildren<Card>();
+
+        foreach (var card in list)
+        {
+            cards.Add(card);
+            Debug.Log(card.cardName.text);
+        }
+
+        return cards;
+    }
+    private void FlipCards(List<Card> cards, bool active)
+    {
+        foreach (Card card in cards)
+        {
+            card.transform.GetChild(0).gameObject.SetActive(active);
         }
     }
 }
