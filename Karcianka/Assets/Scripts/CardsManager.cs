@@ -4,6 +4,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public static class ActivateCards
+{
+    public static void EnableCardScript(this Card card, bool enable)
+    {
+        card.GetComponent<Draggable>().enabled = enable;
+    }
+
+    public static void ResetHasAttackedProperty(this Card card)
+    {
+        card.HasAttacked = false;
+    }
+}
+
 public class CardsManager : Photon.PunBehaviour
 {
     private Vector3 attackedCardPosition;
@@ -11,7 +24,7 @@ public class CardsManager : Photon.PunBehaviour
     private bool attacking = false;
     [SerializeField]
     private Vector3 startPos;
-
+    
     public GameObject player1Hand;
     public GameObject player2Hand;
     public GameObject player1Table;
@@ -75,11 +88,12 @@ public class CardsManager : Photon.PunBehaviour
     }
     public void AttackCard(Card card)
     {
-        if (card == selectedCard || CheckIfCardIsYours(card))
+        if (card == selectedCard || CheckIfCardIsYours(card) || selectedCard.HasAttacked)
         {
             return;
         }
         card.cardHealth -= selectedCard.card.attack;
+        selectedCard.HasAttacked = true;
         DiscardSelection();
         Debug.Log(card.card.health);
     }
@@ -108,7 +122,7 @@ public class CardsManager : Photon.PunBehaviour
     }
     public void DrawCard(int turn)
     {
-        if (deck.Count <= 0)
+        if (deck.Count <= 0 || player1Hand.transform.childCount > 5 || player2Hand.transform.childCount > 5)
         {
             return;
         }
@@ -134,9 +148,16 @@ public class CardsManager : Photon.PunBehaviour
             EnableDropZone(player1Table);
 
             var cardsToDisable = GetCardsInHand(player2Hand);
-            FlipCards(cardsToDisable, false);
             var cardsToEnable = GetCardsInHand(player1Hand);
+            var cardsToReset = GetCardsInHand(player1Table);
+
+            FlipCards(cardsToDisable, false);
             FlipCards(cardsToEnable, true);
+
+            ActivateCards(cardsToDisable, false);
+            ActivateCards(cardsToEnable, true);
+
+            ResetHasAttackedList(cardsToReset);
         }
         else
         {
@@ -147,9 +168,15 @@ public class CardsManager : Photon.PunBehaviour
 
             var cardsToEnable = GetCardsInHand(player2Hand);
             var cardsToDisable = GetCardsInHand(player1Hand);
+            var cardsToReset = GetCardsInHand(player2Table);
 
             FlipCards(cardsToEnable, true);
             FlipCards(cardsToDisable, false);
+
+            ActivateCards(cardsToDisable, false);
+            ActivateCards(cardsToEnable, true);
+
+            ResetHasAttackedList(cardsToReset);
         }
     }
     private void DisableDropZone(GameObject droppablePanel)
@@ -182,11 +209,31 @@ public class CardsManager : Photon.PunBehaviour
 
         return cards;
     }
+
+    private void ResetHasAttackedList(List<Card> cards)
+    {
+        foreach (Card card in cards)
+        {
+            card.ResetHasAttackedProperty();
+        }
+    }
+    private void ActivateCards(List<Card> cards, bool active)
+    {
+        foreach (Card card in cards)
+        {
+            card.EnableCardScript(active);
+        }
+    }
     private void FlipCards(List<Card> cards, bool active)
     {
         foreach (Card card in cards)
         {
             card.transform.GetChild(0).gameObject.SetActive(active);
+            if (card.transform.childCount == 2)
+            {
+                var backCard = card.transform.GetChild(1);
+                backCard.gameObject.SetActive(!active);
+            }
         }
     }
 }

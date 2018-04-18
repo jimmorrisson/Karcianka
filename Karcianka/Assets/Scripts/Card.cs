@@ -5,8 +5,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Draggable))]
-public class Card : MonoBehaviour, IPointerClickHandler
+public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField]
+    private Vector3 zoomedSize;
+    [SerializeField]
+    private Vector3 normalSize;
+
     public CardCharacteristics card;
 
     public Text cardName;
@@ -17,6 +22,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public Text attack;
     public int cardHealth;
     public bool onTable = false;
+    public bool HasAttacked { get; set; }
+
+    private void Start()
+    {
+        HasAttacked = false;
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -28,6 +39,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         {
             if (CardsManager.Instance.selectedCard.onTable && this.onTable)
             {
+                Debug.Log(HasAttacked.ToString());
                 CardsManager.Instance.AttackCard(this);
                 health.text = cardHealth.ToString();
             }
@@ -36,7 +48,15 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // Use this for initialization
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        ZoomIn(zoomedSize);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ZoomOut(normalSize);
+    }
 
     void OnValidate()
     {
@@ -48,7 +68,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         mana.text = card.mana.ToString();
         attack.text = card.attack.ToString();
         cardHealth = card.health;
-}
+    }
 
     private void Update()
     {
@@ -58,4 +78,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    private void ZoomIn(Vector2 zoomedSize)
+    {
+        this.transform.localScale = zoomedSize;
+    }
+
+    private void ZoomOut(Vector2 normalSize)
+    {
+        this.transform.localScale = normalSize;
+    }
 }
