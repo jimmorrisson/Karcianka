@@ -39,7 +39,6 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             if (CardsManager.Instance.selectedCard.onTable && this.onTable)
             {
-                Debug.Log(HasAttacked.ToString());
                 CardsManager.Instance.AttackCard(this);
                 health.text = cardHealth.ToString();
             }

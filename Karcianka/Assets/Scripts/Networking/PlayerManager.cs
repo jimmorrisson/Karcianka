@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class PlayerManager : Photon.PunBehaviour, IPunObservable
 {
+    public int Life { get; private set; }
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
+    private int selfLife;
 
     public static GameObject LocalPlayerInstance;
+    public delegate void TakeDamageDelegate(Card card, PlayerManager player);
 
     private void Awake()
     {
@@ -17,14 +20,33 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
 
         DontDestroyOnLoad(this.gameObject);
     }
+
+    private void OnEnable()
+    {
+       // CardsManager.Instance.OnHeroAttacked += TakeDamage;
+    }
+
+    private void OnDisable()
+    {
+        //CardsManager.Instance.OnHeroAttacked -= TakeDamage;
+    }
+
+    private void Start()
+    {
+        if (photonView.isMine)
+        {
+            Life = 100;
+        }
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if(stream.isWriting)
+        if (stream.isWriting)
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = transform.localRotation;
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+            //stream.SendNext(Life);
         }
         else
         {
@@ -40,9 +62,24 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
             this.fraction = 0;                          // reset the fraction we alreay moved. see Update()
 
             transform.localRotation = rot;              // this sample doesn't smooth rotation
+            //selfLife = (int)stream.ReceiveNext();
+            //this.Life = (int)stream.ReceiveNext();
         }
     }
 
+    private void TakeDamage(Card card, PlayerManager player)
+    {
+        if (card == null)
+        {
+            return;
+        }
+        //player.Life -= card.card.attack;
+    }
+    //[PunRPC]
+    //public void TakeDamagePhoton(Card card)
+    //{
+    //    photonView.RPC("TakeDamage {0}", PhotonTargets.All, card);
+    //}
     private void Update()
     {
         if (this.photonView.isMine)
@@ -60,7 +97,18 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
         // Our fraction variable should reach 1 in 100ms, so we should multiply deltaTime by 10.
         // We want it to take a bit longer, so we multiply with 9 instead!
 
+        //this.Life = (int)(selfLife + Time.deltaTime * 9);
         this.fraction = this.fraction + Time.deltaTime * 9;
         transform.localPosition = Vector3.Lerp(this.onUpdatePos, this.latestCorrectPos, this.fraction); // set our pos between A and B
     }
+
+    //public void TakeDamage(int amountOfDamage)
+    //{
+    //    if (photonView.isMine)
+    //    {
+    //        this.Life -= amountOfDamage;
+    //    }
+    //    photonView.RPC("UpdateHealthUI", PhotonTargets.All);
+    //    Debug.Log(this.Life);
+    //}
 }

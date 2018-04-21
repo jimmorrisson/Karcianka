@@ -24,7 +24,7 @@ public class CardsManager : Photon.PunBehaviour
     private bool attacking = false;
     [SerializeField]
     private Vector3 startPos;
-    
+
     public GameObject player1Hand;
     public GameObject player2Hand;
     public GameObject player1Table;
@@ -33,6 +33,9 @@ public class CardsManager : Photon.PunBehaviour
     public GameObject cardPrefab;
     public List<GameObject> deck = new List<GameObject>();
     public Text currentTurn;
+    public delegate void UnitEventHandler(GameObject unit);
+    public delegate void DamageEventHandler(int amountOfDamage);
+    public event DamageEventHandler OnHeroAttacked;
 
     #region Singleton
     public static CardsManager Instance { get; private set; }
@@ -56,6 +59,10 @@ public class CardsManager : Photon.PunBehaviour
         {
             DiscardSelection();
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            AttackHeroOnClicked();
+        }
     }
 
     //private void AttackAnimation()
@@ -70,6 +77,10 @@ public class CardsManager : Photon.PunBehaviour
 
     public void SelectCard(Card card)
     {
+        if (card.HasAttacked)
+        {
+            return;
+        }
         if (Instance.selectedCard != null)
         {
             DiscardSelection();
@@ -234,6 +245,34 @@ public class CardsManager : Photon.PunBehaviour
                 var backCard = card.transform.GetChild(1);
                 backCard.gameObject.SetActive(!active);
             }
+        }
+    }
+
+    private void AttackHeroOnClicked()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1000.0f))
+        {
+            LocalPlayer player = hit.collider.GetComponent<LocalPlayer>();
+            if (player != null && selectedCard != null && selectedCard.HasAttacked == false && selectedCard.onTable == true)
+            {
+                player.TakeDamage(selectedCard.card.attack);
+                selectedCard.HasAttacked = true;
+                Instance.DiscardSelection();
+            }
+        }
+    }
+
+    private void HeroAttacked(int dmg)
+    {
+        if (selectedCard == null)
+        {
+            return;
+        }
+        if (OnHeroAttacked != null)
+        {
+            OnHeroAttacked(dmg);
         }
     }
 }
