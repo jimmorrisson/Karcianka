@@ -11,8 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2e7bf009a7975149ae6c011c568c670, type: 3}
   m_Name: Hehe
   m_EditorClassIdentifier: 
-  name: Hehe
-  description: Heheheheh
+  name: Knight
+  description: Has a fancy sword
   image: {fileID: 21300000, guid: 5971e8fa3acffdf4da7128d4475a2a86, type: 3}
   health: 10
   mana: 0
